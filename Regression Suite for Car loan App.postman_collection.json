@@ -1,0 +1,1633 @@
+{
+	"info": {
+		"_postman_id": "8d48530f-36c9-4b3a-a5e3-82b8f753396e",
+		"name": "Regression Suite for Car loan App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Viable flows",
+			"item": [
+				{
+					"name": "TestCase_Viable_flow_route_to_L1",
+					"item": [
+						{
+							"name": "Create_New_Case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('CaseID',responseJson.ID);\r",
+											"pm.test(\"Successfull POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+											"});\r",
+											"pm.test(\"Case creation was successfull\", function () {\r",
+											"pm.expect(responseJson.ID).not.eql(null);\r",
+											"});\r",
+											"console.log(\"Case ID : \" + responseJson.ID + \" has been created successfully\" )\r",
+											"/*pm.test(\"Response time is less than 300ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+											"});*/\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"caseTypeID\": \"MyCo-Loans-Work-VehicleLoan\",\r\n    \"processID\": \"\",\r\n    \"parentCaseID\": \"\",\r\n    \"content\": {\r\n        \"AnnualIncome\": \"5000\",\r\n        \"Cost\": \"500000\",\r\n        \"Email\": \"Anish.Tripathi@maantictech.com\",\r\n        \"FirstName\": \"Anish\",\r\n        \"LastName\": \"Tripathi\",\r\n        \"Make\": \"Maruti\",\r\n        \"Model\": \"Alto\",\r\n        \"NationalID\": \"AFJPT8222P\",\r\n        \"PhoneNumber\": \"8334930130\",\r\n        \"CreatedFromAPI\": \"true\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cases",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get the Case details",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											"pm.test(\"Assignment created\", function () {\r",
+											"pm.expect(responseJson.assignments[0].ID).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Case Ruoted to L1Approver_1\", function () {\r",
+											"pm.expect(responseJson.assignments[0].routedTo).eql(\"L1Approver_1\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Run data set up for L1 Viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L1_Viable",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L1_Viable"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enter the Risk Assesment",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=EnterRiskAssesment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "EnterRiskAssesment"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ExecuteDataSetUp_L2Approval",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L2_Approved",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L2_Approved"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set the Assignment Flow to Supervisor Review",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Execute_L2_SupervisorApproval",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=SupervisorApproval",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "SupervisorApproval"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the status of the work item is Resolved - Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"//pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"//pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"pm.test(\"Case moved to Resolved-Completed\", function () {\r",
+											"pm.expect(responseJson.status).eql(\"Resolved-Completed\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "qazwsx@2021",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "rebonto",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TestCase_Viable_flow_route_to_L2",
+					"item": [
+						{
+							"name": "Create_New_Case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('CaseID',responseJson.ID);\r",
+											"pm.test(\"Successfull POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+											"});\r",
+											"pm.test(\"Case creation was successfull\", function () {\r",
+											"pm.expect(responseJson.ID).not.eql(null);\r",
+											"});\r",
+											"console.log(\"Case ID : \" + responseJson.ID + \" has been created successfully\" )\r",
+											"/*pm.test(\"Response time is less than 300ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+											"});*/\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"caseTypeID\": \"MyCo-Loans-Work-VehicleLoan\",\r\n    \"processID\": \"\",\r\n    \"parentCaseID\": \"\",\r\n    \"content\": {\r\n        \"AnnualIncome\": \"10001\",\r\n        \"Cost\": \"500000\",\r\n        \"Email\": \"Anish.Tripathi@maantictech.com\",\r\n        \"FirstName\": \"Anish\",\r\n        \"LastName\": \"Tripathi\",\r\n        \"Make\": \"Maruti\",\r\n        \"Model\": \"Alto\",\r\n        \"NationalID\": \"AFJPT8222P\",\r\n        \"PhoneNumber\": \"8334930130\",\r\n        \"CreatedFromAPI\": \"true\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cases",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the approver level and set the flow to Initial level",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											"pm.test(\"Assignment created\", function () {\r",
+											"pm.expect(responseJson.assignments[0].ID).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Case Ruoted to L1Approver_2\", function () {\r",
+											"pm.expect(responseJson.assignments[0].routedTo).eql(\"L1Approver_2\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Run data set up for L2 Viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L1_Viable",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L1_Viable"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enter the Risk Assesment",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=EnterRiskAssesment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "EnterRiskAssesment"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ExecuteDataSetUp_L2Approval",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L2_Approved",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L2_Approved"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set the Assignment Flow to Supervisor Review",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Execute_L2_SupervisorApproval",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=SupervisorApproval",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "SupervisorApproval"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the status of the work item is Resolved - Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"//pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"//pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"pm.test(\"Case moved to Resolved-Completed\", function () {\r",
+											"pm.expect(responseJson.status).eql(\"Resolved-Completed\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "qazwsx@2021",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "rebonto",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Non Viable Flows",
+			"item": [
+				{
+					"name": "TestCase_Non_Viable_flow_route_to_L1",
+					"item": [
+						{
+							"name": "Create_New_Case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('CaseID',responseJson.ID);\r",
+											"pm.test(\"Successfull POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+											"});\r",
+											"pm.test(\"Case creation was successfull\", function () {\r",
+											"pm.expect(responseJson.ID).not.eql(null);\r",
+											"});\r",
+											"console.log(\"Case ID : \" + responseJson.ID + \" has been created successfully\" )\r",
+											"/*pm.test(\"Response time is less than 300ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+											"});*/\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"caseTypeID\": \"MyCo-Loans-Work-VehicleLoan\",\r\n    \"processID\": \"\",\r\n    \"parentCaseID\": \"\",\r\n    \"content\": {\r\n        \"AnnualIncome\": \"5000\",\r\n        \"Cost\": \"500000\",\r\n        \"Email\": \"Anish.Tripathi@maantictech.com\",\r\n        \"FirstName\": \"Anish\",\r\n        \"LastName\": \"Tripathi\",\r\n        \"Make\": \"Maruti\",\r\n        \"Model\": \"Alto\",\r\n        \"NationalID\": \"AFJPT8222P\",\r\n        \"PhoneNumber\": \"8334930130\",\r\n        \"CreatedFromAPI\": \"true\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cases",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check that work item routed to Approver 1",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											"pm.test(\"Assignment created\", function () {\r",
+											"pm.expect(responseJson.assignments[0].ID).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Case Ruoted to L1Approver_1\", function () {\r",
+											"pm.expect(responseJson.assignments[0].routedTo).eql(\"L1Approver_1\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Run data set up for L1 Non Viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L1_NonViable",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L1_NonViable"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set the assignment flow to Non viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Successfull Non viable Assignment Update\", function () {\r",
+											"    pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enter the Risk Assesment",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=EnterRiskAssesment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "EnterRiskAssesment"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the status of the work item is Resolved - Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"//pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"//pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"pm.test(\"Case moved to Resolved-Rejected\", function () {\r",
+											"pm.expect(responseJson.status).eql(\"Resolved-Rejected\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "qazwsx@2021",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "rebonto",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "TestCase_Non_Viable_flow_route_to_L2",
+					"item": [
+						{
+							"name": "Create_New_Case",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('CaseID',responseJson.ID);\r",
+											"pm.test(\"Successfull POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+											"});\r",
+											"pm.test(\"Case creation was successfull\", function () {\r",
+											"pm.expect(responseJson.ID).not.eql(null);\r",
+											"});\r",
+											"console.log(\"Case ID : \" + responseJson.ID + \" has been created successfully\" )\r",
+											"/*pm.test(\"Response time is less than 300ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(300);\r",
+											"});*/\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"caseTypeID\": \"MyCo-Loans-Work-VehicleLoan\",\r\n    \"processID\": \"\",\r\n    \"parentCaseID\": \"\",\r\n    \"content\": {\r\n        \"AnnualIncome\": \"50000\",\r\n        \"Cost\": \"500000\",\r\n        \"Email\": \"Anish.Tripathi@maantictech.com\",\r\n        \"FirstName\": \"Anish\",\r\n        \"LastName\": \"Tripathi\",\r\n        \"Make\": \"Maruti\",\r\n        \"Model\": \"Alto\",\r\n        \"NationalID\": \"AFJPT8222P\",\r\n        \"PhoneNumber\": \"8334930130\",\r\n        \"CreatedFromAPI\": \"true\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/cases",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check that work item routed to Approver 2",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"\r",
+											"pm.test(\"Assignment created\", function () {\r",
+											"pm.expect(responseJson.assignments[0].ID).not.eql(null);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Case Routed to L1Approver_2\", function () {\r",
+											"pm.expect(responseJson.assignments[0].routedTo).eql(\"L1Approver_2\");\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Run data set up for L2 Non Viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Successfull Data Update\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/data/D_UpdateCase?CaseKey={{CaseID}}&DTName=L1_NonViable",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"data",
+										"D_UpdateCase"
+									],
+									"query": [
+										{
+											"key": "CaseKey",
+											"value": "{{CaseID}}"
+										},
+										{
+											"key": "DTName",
+											"value": "L1_NonViable"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set the assignment flow to Non viable",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"\r",
+											"const responseJson = pm.response.json();\r",
+											"\r",
+											"pm.test(\"Successfull Non viable Assignment Update\", function () {\r",
+											"    pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "Cognizant1$",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "anish",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enter the Risk Assesment",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/assignments/{{AssignmentID}}?actionID=EnterRiskAssesment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"assignments",
+										"{{AssignmentID}}"
+									],
+									"query": [
+										{
+											"key": "actionID",
+											"value": "EnterRiskAssesment"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check the status of the work item is Resolved - Completed",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const responseJson = pm.response.json();\r",
+											"//pm.collectionVariables.set('Etag',pm.response.headers.get(\"etag\"));\r",
+											"//pm.collectionVariables.set('AssignmentID',responseJson.assignments[0].ID);\r",
+											"pm.test(\"Case moved to Resolved-Rejected\", function () {\r",
+											"pm.expect(responseJson.status).eql(\"Resolved-Rejected\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "qazwsx@2021",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "rebonto",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/cases/{{CaseID}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"cases",
+										"{{CaseID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "qazwsx@2021",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "rebonto",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "Etag",
+			"value": ""
+		},
+		{
+			"key": "CaseID",
+			"value": ""
+		},
+		{
+			"key": "AssignmentID",
+			"value": ""
+		}
+	]
+}
